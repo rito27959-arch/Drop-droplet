@@ -1,0 +1,300 @@
+---
+// /rejoindre/#… — LA PAGE DES INVITATIONS GROUP DROP.
+//
+// Droplet Drop met ce lien dans le QR code et le « lien d'invitation » d'une
+// distribution. Scanné avec l'application, il est lu directement. Scanné
+// avec l'appareil photo d'un téléphone qui ne l'a pas encore, il ouvre
+// cette page : qui invite, jusqu'à quand, comment installer et rejoindre.
+//
+// ⚠️ L'invitation est après « # » : le navigateur ne l'envoie JAMAIS au
+// serveur. Tout se lit ici, dans la page. Une seule page pour toutes les
+// langues : le lien est le même pour tout le monde, la page parle la
+// langue du navigateur.
+import Base from '../layouts/Base.astro';
+import Logo from '../components/Logo.astro';
+import BoutonTelecharger from '../components/BoutonTelecharger.astro';
+import { LANGUES, chemin, textes } from '../i18n';
+
+const t = textes('fr');
+const CLES = [
+  'invTitre', 'invDe', 'invExpire', 'invExpiree', 'invInvalide', 'invEtape1', 'invEtape2', 'invEtape3',
+  'invCopier', 'invCopie', 'invMemeReseau', 'invPrive', 'telecharger', 'dlAndroid', 'dlWindows', 'dlMacos',
+  'dlLinux', 'dlIos', 'toutesPlateformes',
+] as const;
+const dictionnaires = Object.fromEntries(
+  LANGUES.map((l) => {
+    const d = textes(l.code);
+    return [l.code, { rtl: !!l.rtl, accueil: chemin(l.code), ...Object.fromEntries(CLES.map((c) => [c, d[c]])) }];
+  }),
+);
+---
+<Base langue="fr" page="rejoindre" titre={t.invTitre} description={t.invEtape1} privee>
+  <main class="inv fond-noir">
+    <div class="inv__carte contenu">
+      <Logo taille={76} />
+      <p class="inv__surtitre">Group Drop</p>
+      <h1 class="inv__titre" data-t="invTitre">{t.invTitre}</h1>
+      <p class="inv__qui" data-qui></p>
+      <p class="inv__quand" data-quand></p>
+
+      <ol class="inv__etapes" data-etapes>
+        <li>
+          <span>1</span>
+          <div>
+            <p data-t="invEtape1">{t.invEtape1}</p>
+            <div class="inv__dl">
+              <BoutonTelecharger t={t} ancre={`${chemin('fr')}#telecharger`} />
+              <a class="lien-fleche" data-accueil href={`${chemin('fr')}#telecharger`} data-t="toutesPlateformes">{t.toutesPlateformes}</a>
+            </div>
+          </div>
+        </li>
+        <li><span>2</span><p data-t="invEtape2">{t.invEtape2}</p></li>
+        <li>
+          <span>3</span>
+          <div>
+            <p data-t="invEtape3">{t.invEtape3}</p>
+            <button class="bouton bouton--verre inv__copier" type="button" data-copier>
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2.5" /><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" /></svg>
+              <span data-t="invCopier">{t.invCopier}</span>
+            </button>
+          </div>
+        </li>
+      </ol>
+
+      <p class="inv__note" data-t="invMemeReseau">{t.invMemeReseau}</p>
+      <p class="inv__note inv__note--prive">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
+        <span data-t="invPrive">{t.invPrive}</span>
+      </p>
+    </div>
+  </main>
+</Base>
+
+<script is:inline type="application/json" id="dictionnaires" set:html={JSON.stringify(dictionnaires)}></script>
+
+<style>
+  .inv {
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    padding: 72px 0 calc(56px + env(safe-area-inset-bottom));
+    background:
+      radial-gradient(60% 40% at 50% 0%, rgba(22, 139, 255, 0.22), transparent 70%),
+      radial-gradient(50% 40% at 50% 100%, rgba(72, 85, 232, 0.16), transparent 70%),
+      var(--noir);
+    text-align: center;
+  }
+  .inv__carte {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 560px;
+  }
+  .inv__surtitre {
+    margin-top: 22px;
+    font-family: var(--f-titre);
+    font-weight: 650;
+    background: var(--liquide);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .inv__titre {
+    margin-top: 6px;
+    font-size: var(--t-4);
+    line-height: 1.08;
+    letter-spacing: -0.024em;
+  }
+  .inv__qui {
+    margin-top: 14px;
+    font-size: var(--t-2);
+    color: var(--clair);
+  }
+  .inv__qui:empty,
+  .inv__quand:empty {
+    display: none;
+  }
+  .inv__quand {
+    margin-top: 4px;
+    color: var(--clair-2);
+  }
+  .inv__quand.est-expiree {
+    color: #ffb340;
+  }
+  .inv__etapes {
+    list-style: none;
+    margin: 36px 0 0;
+    padding: 6px 22px;
+    width: 100%;
+    border-radius: 26px;
+    background: var(--carte-sombre);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+    text-align: start;
+  }
+  .inv__etapes > li {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 14px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--trait-nuit);
+  }
+  .inv__etapes > li:last-child {
+    border-bottom: 0;
+  }
+  .inv__etapes > li > span {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--liquide);
+    color: #fff;
+    font-weight: 650;
+    font-size: 0.875rem;
+  }
+  .inv__etapes p {
+    padding-top: 3px;
+  }
+  .inv__dl {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 20px;
+    margin-top: 14px;
+  }
+  .inv__dl :global(.bouton) {
+    white-space: normal;
+    max-width: 100%;
+    text-align: center;
+    padding-block: 10px;
+  }
+  .inv__copier {
+    margin-top: 14px;
+    border: 0;
+    cursor: pointer;
+    color: #fff;
+  }
+  .inv__copier.est-copie {
+    background: rgba(52, 210, 123, 0.18);
+    box-shadow: inset 0 0 0 1px rgba(52, 210, 123, 0.5);
+  }
+  .inv__note {
+    margin-top: 22px;
+    font-size: 0.875rem;
+    color: var(--clair-2);
+    max-width: 30rem;
+  }
+  .inv__note--prive {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-top: 10px;
+    color: var(--clair-3);
+    text-align: start;
+  }
+  .inv__note--prive svg {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+  /* Invitation illisible ou expirée : pas d'étape « coller ». */
+  .inv.est-inutilisable [data-etapes] > li:not(:first-child),
+  .inv.est-inutilisable .inv__note {
+    display: none;
+  }
+</style>
+
+<script>
+  import { preparerTelechargements } from '../scripts/plateforme';
+
+  type Dico = Record<string, string> & { rtl: boolean; accueil: string };
+  const dicos = JSON.parse(document.getElementById('dictionnaires')!.textContent!) as Record<string, Dico>;
+
+  // La langue du navigateur, si le site la parle ; sinon l'anglais.
+  const langue =
+    navigator.languages.map((l) => l.slice(0, 2).toLowerCase()).find((l) => l in dicos) ??
+    (dicos.en ? 'en' : 'fr');
+  const t = dicos[langue];
+  if (langue !== 'fr') {
+    document.documentElement.lang = langue;
+    document.documentElement.dir = t.rtl ? 'rtl' : 'ltr';
+    document.querySelectorAll<HTMLElement>('[data-t]').forEach((el) => {
+      const v = t[el.dataset.t!];
+      if (typeof v === 'string') el.textContent = v;
+    });
+    document.querySelectorAll<HTMLAnchorElement>('[data-accueil]').forEach((a) => (a.href = `${t.accueil}#telecharger`));
+    const bouton = document.querySelector<HTMLAnchorElement>('a[data-telecharger]');
+    if (bouton) {
+      bouton.href = `${t.accueil}#telecharger`;
+      bouton.dataset.libelles = JSON.stringify({
+        android: t.dlAndroid, windows: t.dlWindows, macos: t.dlMacos, linux: t.dlLinux, ios: t.dlIos,
+      });
+      bouton.querySelector('[data-libelle]')!.textContent = t.telecharger;
+      // Le libellé de CET appareil, dans la bonne langue.
+      preparerTelechargements();
+    }
+    document.title = `${t.invTitre} · Droplet Drop`;
+  }
+
+  // L'invitation : la même lecture que l'application (Invitation::decoder) —
+  // base64url du JSON {v, h, p, fp, s, j, n, x}.
+  type Invitation = { v: number; n: string; x: number; s: string; j: string; fp: string };
+  function lire(): Invitation | null {
+    try {
+      const brut = location.hash.slice(1).replace(/-/g, '+').replace(/_/g, '/');
+      if (!brut || brut.length > 6000) return null;
+      const octets = Uint8Array.from(atob(brut + '='.repeat((4 - (brut.length % 4)) % 4)), (c) => c.charCodeAt(0));
+      const i = JSON.parse(new TextDecoder().decode(octets)) as Invitation;
+      const ok = i.v === 1 && i.s?.length === 32 && i.j?.length === 64 && /^[0-9a-f]{64}$/i.test(i.fp ?? '');
+      return ok ? i : null;
+    } catch {
+      return null;
+    }
+  }
+
+  const page = document.querySelector<HTMLElement>('.inv')!;
+  const qui = document.querySelector<HTMLElement>('[data-qui]')!;
+  const quand = document.querySelector<HTMLElement>('[data-quand]')!;
+  const inv = lire();
+  if (!inv) {
+    page.classList.add('est-inutilisable');
+    quand.textContent = t.invInvalide;
+  } else {
+    // Le nom vient de l'invitation : du texte, jamais du HTML.
+    qui.textContent = t.invDe.replace('{nom}', inv.n.slice(0, 80) || 'Droplet Drop');
+    const fin = new Date(inv.x * 1000);
+    if (fin.getTime() <= Date.now()) {
+      page.classList.add('est-inutilisable');
+      quand.textContent = t.invExpiree;
+      quand.classList.add('est-expiree');
+    } else {
+      const h = new Intl.DateTimeFormat(langue, {
+        hour: '2-digit',
+        minute: '2-digit',
+        ...(fin.getTime() - Date.now() > 20 * 3600e3 ? { weekday: 'long' } : {}),
+      }).format(fin);
+      quand.textContent = t.invExpire.replace('{h}', h);
+    }
+  }
+
+  // Copier : l'adresse entière, telle que l'application sait la lire.
+  const copier = document.querySelector<HTMLButtonElement>('[data-copier]')!;
+  copier.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(location.href);
+    } catch {
+      const zone = document.createElement('textarea');
+      zone.value = location.href;
+      document.body.append(zone);
+      zone.select();
+      document.execCommand('copy');
+      zone.remove();
+    }
+    copier.classList.add('est-copie');
+    copier.querySelector('[data-t]')!.textContent = t.invCopie;
+  });
+</script>

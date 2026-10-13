@@ -1,0 +1,284 @@
+/* ==========================================================================
+   LE SYSTÈME DU SITE — le même que dropletmesh.app, sur le modèle d'apple.com
+   --------------------------------------------------------------------------
+   • Le produit au centre et en grand ; le texte centré, court, monumental.
+   • Deux fonds seulement : la nuit de l'application et son gris clair. Les
+     sections alternent pour rythmer la page.
+   • Une couleur d'action : le dégradé liquide de Droplet Drop.
+   • Inter Tight pour les titres, Inter pour le texte : la neutralité de SF
+     Pro, dont le site ne peut pas se servir.
+   ========================================================================== */
+
+/* DROPLET LIQUID — les couleurs de l'application, et seulement elles.
+   Le bleu électrique et son second ton cyan forment le dégradé « liquide »
+   des actions ; l'indigo n'intervient que dans les lueurs. Les fonds sont
+   ceux de l'application : la nuit bleutée (#080C16) et le gris clair
+   (#F3F6FA) — pas le noir pur ni le gris d'Apple : Droplet Drop a sa
+   propre lumière, la même sur le site et dans l'application. */
+:root {
+  --noir: #080c16;
+  --nuit: #0e1420;
+  --gris: #f3f6fa;
+  --blanc: #fff;
+  --encre: #0b1220;
+  --encre-2: #55607a;
+  --clair: #f7f9fc;
+  --clair-2: #a5b0c1;
+  --clair-3: #6e7a8e;
+  --carte-sombre: #141b28;
+  --carte-sombre-2: #202a39;
+  --goutte: #168bff;
+  --goutte-2: #34d8ff;
+  --indigo: #4855e8;
+  --liquide: linear-gradient(135deg, var(--goutte), var(--goutte-2));
+  --goutte-fonce: #0f74e0;
+  --succes: #34d27b;
+  --lien-clair: #0864cc;
+  --lien-sombre: #4da8ff;
+
+  --texte-nuit: #f7f9fc;
+  --texte-nuit-2: #a5b0c1;
+  --texte-jour: #0b1220;
+  --texte-jour-2: #55607a;
+  --trait-nuit: rgba(255, 255, 255, 0.1);
+  --trait-jour: rgba(11, 18, 32, 0.1);
+  --brume: #f3f6fa;
+
+  --f-titre: 'Inter Tight Variable', 'Inter Tight', -apple-system, BlinkMacSystemFont, 'SF Pro Display',
+    'Segoe UI', 'Noto Sans', 'Noto Sans Arabic', 'Noto Sans Devanagari', 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+  --f-texte: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI',
+    'Noto Sans', 'Noto Sans Arabic', 'Noto Sans Devanagari', 'PingFang SC', 'Microsoft YaHei',
+    sans-serif;
+
+  /* L'échelle d'apple.com : 17 / 21 / 28 / 40 / 56 / 80. */
+  --t-0: 0.8125rem;
+  --t-1: 1.0625rem;
+  --t-2: clamp(1.1875rem, 1rem + 0.5vw, 1.3125rem);
+  --t-3: clamp(1.5rem, 1.1rem + 1.2vw, 1.75rem);
+  --t-4: clamp(2rem, 1.2rem + 2.6vw, 3.5rem);
+  --t-5: clamp(2.75rem, 1.3rem + 5vw, 5rem);
+  --t-6: clamp(3.2rem, 1rem + 8vw, 7.5rem);
+
+  --largeur: 980px;
+  --large: 1260px;
+  --gouttiere: clamp(20px, 5vw, 40px);
+  --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-sortie: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  background: var(--noir);
+}
+
+body {
+  margin: 0;
+  font-family: var(--f-texte);
+  font-size: var(--t-1);
+  line-height: 1.47;
+  letter-spacing: -0.011em;
+  color: var(--clair);
+  background: var(--noir);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+  font-feature-settings: 'ss01', 'cv11';
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--f-titre);
+  /* 600, pas 700 : Apple titre en SF Pro Display semi-gras. Plus lourd,
+     avec l'approche serrée d'Inter Tight, les lettres se touchaient. */
+  font-weight: 600;
+  margin: 0;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+}
+
+img,
+svg,
+canvas {
+  display: block;
+}
+
+:focus-visible {
+  outline: 2px solid var(--lien-sombre);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.contenu {
+  width: min(100% - 2 * var(--gouttiere), var(--largeur));
+  margin-inline: auto;
+}
+
+.contenu--large {
+  width: min(100% - 2 * var(--gouttiere), var(--large));
+  margin-inline: auto;
+}
+
+/* Les deux fonds d'Apple. */
+.fond-noir {
+  background: var(--noir);
+  color: var(--clair);
+}
+
+.fond-gris {
+  background: var(--gris);
+  color: var(--encre);
+}
+
+.fond-blanc {
+  background: var(--blanc);
+  color: var(--encre);
+}
+
+/* ── Les titres de section, comme sur apple.com ───────────────────── */
+.titre-section {
+  font-size: var(--t-5);
+  line-height: 1.07;
+  letter-spacing: -0.022em;
+  font-weight: 600;
+}
+
+.chapo {
+  font-size: var(--t-3);
+  line-height: 1.24;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+.fond-noir .chapo {
+  color: var(--clair-2);
+}
+
+.fond-gris .chapo,
+.fond-blanc .chapo {
+  color: var(--encre-2);
+}
+
+/* ── Les boutons et les liens d'action ───────────────────────────── */
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 22px;
+  border-radius: 980px;
+  font-family: var(--f-texte);
+  font-size: var(--t-1);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  background: var(--liquide);
+  color: #fff;
+  box-shadow: 0 6px 20px -8px color-mix(in srgb, var(--goutte) 70%, transparent);
+  transition:
+    filter 0.25s var(--ease),
+    transform 0.2s var(--ease);
+}
+
+.bouton:hover {
+  filter: brightness(1.08);
+}
+
+/* Le bouton discret : du verre, pour la seconde action. */
+.bouton--verre {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+.fond-gris .bouton--verre,
+.fond-blanc .bouton--verre {
+  background: rgba(11, 18, 32, 0.05);
+  color: var(--encre);
+  box-shadow: inset 0 0 0 1px rgba(11, 18, 32, 0.12);
+}
+
+.bouton:active {
+  transform: scale(0.97);
+}
+
+.bouton svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Le « En savoir plus › » d'Apple : un lien, pas un bouton. */
+.lien-fleche {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--t-1);
+  text-decoration: none;
+  color: var(--lien-sombre);
+}
+
+.fond-gris .lien-fleche,
+.fond-blanc .lien-fleche {
+  color: var(--lien-clair);
+}
+
+.lien-fleche:hover {
+  text-decoration: underline;
+}
+
+.lien-fleche::after {
+  content: '›';
+  font-size: 1.25em;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+/* En arabe, rien à faire : « › » est un caractère « miroir », que le
+   navigateur retourne tout seul dans un texte de droite à gauche. Le
+   remplacer par « ‹ » le faisait retourner deux fois — la flèche pointait
+   à rebours. */
+
+/* ── Apparition au défilement ─────────────────────────────────────
+   Réservée aux titres de section : un léger lever, une seule fois.
+   (Le reste du mouvement de la page est piloté par le défilement.) */
+.apparait {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 1s var(--ease-sortie),
+    transform 1s var(--ease-sortie);
+}
+
+.apparait.est-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .apparait {
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,0 +1,256 @@
+---
+// L'OUVERTURE, À LA MANIÈRE D'UNE PAGE PRODUIT D'APPLE — la même mise en
+// scène que dropletmesh.app :
+//
+//   • Le nom du produit, puis une phrase énorme, centrée.
+//   • Le bouton qui propose la version de CET appareil, et « Toutes les
+//     plateformes › ».
+//   • Le PRODUIT, en grand : un ordinateur et un téléphone. Une photo part
+//     de l'un et tombe dans l'autre ; l'anneau se remplit, la coche se
+//     dessine — « Tout est arrivé, vérifié. » Le geste de l'application,
+//     en sept secondes.
+//
+// Derrière, le maillage de la famille Droplet, en bleu : discret, il dit
+// « les appareils autour de vous » sans voler la scène.
+import type { Textes } from '../i18n/fr';
+import BoutonTelecharger from './BoutonTelecharger.astro';
+import Ecran from './Ecran.astro';
+import Logo from './Logo.astro';
+import Portable from './Portable.astro';
+import Telephone from './Telephone.astro';
+
+interface Props { t: Textes }
+const { t } = Astro.props;
+---
+<section class="hero fond-noir" data-hero aria-labelledby="hero-titre">
+  <canvas class="hero__maillage" data-maillage aria-hidden="true"></canvas>
+
+  <div class="hero__texte contenu">
+    <p class="hero__nom"><Logo taille={34} /> Droplet Drop</p>
+    <h1 id="hero-titre" class="hero__titre">{t.heroTitre}</h1>
+    <p class="hero__chapo">{t.heroTexte}</p>
+    <div class="hero__actions">
+      <BoutonTelecharger t={t} />
+      <a class="lien-fleche" href="#telecharger">{t.toutesPlateformes}</a>
+    </div>
+  </div>
+
+  <div class="hero__scene" aria-hidden="true">
+    <div class="hero__portable" data-portable>
+      <Portable largeur="var(--l-portable)"><Ecran t={t} vue="accueil" large /></Portable>
+    </div>
+    <!-- Le fichier en vol : il quitte la carte « Téléphone de Sami » et
+         plonge dans le téléphone. -->
+    <span class="hero__vol"><span></span></span>
+    <div class="hero__tel" data-tel>
+      <Telephone largeur="var(--l-tel)"><Ecran t={t} vue="arrivee" anime /></Telephone>
+    </div>
+  </div>
+  <p class="hero__note">{t.heroNote}</p>
+</section>
+
+<style>
+  .hero {
+    --l-portable: clamp(300px, 56vw, 760px);
+    --l-tel: clamp(140px, 17vw, 236px);
+    --ouvert: 0;
+    position: relative;
+    padding: 112px 0 64px;
+    overflow: hidden;
+    isolation: isolate;
+    text-align: center;
+    background:
+      radial-gradient(55% 45% at 50% 82%, rgba(22, 139, 255, 0.2), transparent 70%),
+      radial-gradient(70% 55% at 80% 100%, rgba(72, 85, 232, 0.16), transparent 70%),
+      var(--noir);
+  }
+  .hero__maillage {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.8;
+    mask-image: linear-gradient(180deg, transparent 0%, #000 25%, #000 65%, transparent 100%);
+  }
+  .hero__nom {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--f-titre);
+    font-size: var(--t-3);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    animation: monter 1.2s var(--ease-sortie) both;
+  }
+  .hero__titre {
+    margin: 18px auto 0;
+    max-width: 16ch;
+    font-size: clamp(2.7rem, 1rem + 5.2vw, 5.4rem);
+    line-height: 1.04;
+    letter-spacing: -0.028em;
+    font-weight: 650;
+    background: linear-gradient(180deg, #fff 30%, #9fb4d6 125%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: monter 1.2s 0.08s var(--ease-sortie) both;
+  }
+  .hero__chapo {
+    margin: 26px auto 0;
+    max-width: 40rem;
+    font-size: var(--t-2);
+    line-height: 1.42;
+    color: var(--clair-2);
+    animation: monter 1.2s 0.16s var(--ease-sortie) both;
+  }
+  .hero__actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px 28px;
+    margin-top: 34px;
+    animation: monter 1.2s 0.24s var(--ease-sortie) both;
+  }
+
+  /* ── La scène ───────────────────────────────────────────────────── */
+  .hero__scene {
+    position: relative;
+    width: calc(var(--l-portable) * 1.16 + var(--l-tel) * 0.5);
+    max-width: 100%;
+    margin: clamp(48px, 6vw, 76px) auto 0;
+    /* La hauteur du portable (écran 16:10,4 + plateau), et le pied du
+       téléphone qui descend un peu plus bas. */
+    height: calc(var(--l-portable) * 0.7);
+  }
+  .hero__portable {
+    position: absolute;
+    top: 0;
+    left: calc(var(--l-portable) * 0.08);
+    animation: entrer 1.6s 0.25s var(--ease-sortie) both;
+    transform: translateY(calc((1 - var(--ouvert)) * 10px));
+  }
+  .hero__tel {
+    position: absolute;
+    right: 0;
+    bottom: calc(var(--l-tel) * -0.1);
+    z-index: 3;
+    animation: entrer-tel 1.6s 0.45s var(--ease-sortie) both;
+    transform: translateY(calc(var(--ouvert) * -18px)) rotate(calc(var(--ouvert) * -2deg));
+  }
+
+  /* Le vol : une vignette part de l'écran du portable, décrit un arc et
+     plonge dans le téléphone, au moment où l'anneau commence à se remplir
+     (même boucle de 7 s que l'écran d'arrivée). */
+  .hero__vol {
+    position: absolute;
+    z-index: 4;
+    left: calc(var(--l-portable) * 0.62);
+    top: calc(var(--l-portable) * 0.36);
+    width: calc(var(--l-tel) * 0.24);
+    aspect-ratio: 1;
+    offset-path: path('M0 0 C 60 -150, 190 -120, 230 40');
+    offset-rotate: 0deg;
+    animation: voler 7s var(--ease) infinite;
+    pointer-events: none;
+  }
+  .hero__vol span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 22%;
+    background: linear-gradient(135deg, #ffb36b, #ff5d8f);
+    box-shadow:
+      0 0 0 2px rgba(255, 255, 255, 0.9),
+      0 12px 30px -6px rgba(22, 139, 255, 0.7);
+  }
+  @keyframes voler {
+    0%, 4% { offset-distance: 0%; opacity: 0; transform: scale(0.6); }
+    8% { opacity: 1; transform: scale(1); }
+    20% { opacity: 1; transform: scale(0.85); }
+    23%, 100% { offset-distance: 100%; opacity: 0; transform: scale(0.3); }
+  }
+
+  .hero__note {
+    margin-top: 40px;
+    font-size: var(--t-0);
+    color: var(--clair-3);
+  }
+
+  @keyframes monter {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+  }
+  @keyframes entrer {
+    from {
+      opacity: 0;
+      transform: translateY(80px) scale(0.96);
+    }
+  }
+  @keyframes entrer-tel {
+    from {
+      opacity: 0;
+      transform: translateY(140px);
+    }
+  }
+
+  @media (max-width: 700px) {
+    .hero {
+      --l-portable: 76vw;
+      --l-tel: 30vw;
+      padding-top: 104px;
+    }
+    .hero__scene {
+      width: 100%;
+      height: calc(var(--l-portable) * 0.86);
+    }
+    .hero__portable {
+      /* Le plateau déborde de 8 % de chaque côté : on le garde à l'écran. */
+      left: calc(var(--l-portable) * 0.08 + 8px);
+    }
+    .hero__tel {
+      right: 8px;
+      bottom: 0;
+    }
+    .hero__vol {
+      left: 52%;
+      top: 26%;
+      offset-path: path('M0 0 C 30 -70, 90 -60, 110 30');
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__vol {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import '../scripts/maillage';
+
+  // Au défilement, le téléphone se lève un peu vers le lecteur.
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  const reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (hero && !reduit) {
+    let attente = false;
+    const maj = () => {
+      attente = false;
+      const p = Math.min(1, Math.max(0, window.scrollY / (window.innerHeight * 0.7)));
+      hero.style.setProperty('--ouvert', (1 - Math.pow(1 - p, 3)).toFixed(4));
+    };
+    maj();
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!attente) {
+          attente = true;
+          requestAnimationFrame(maj);
+        }
+      },
+      { passive: true },
+    );
+  }
+</script>

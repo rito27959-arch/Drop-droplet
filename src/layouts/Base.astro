@@ -1,0 +1,77 @@
+---
+import '@fontsource-variable/inter-tight';
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import { BASE, LANGUES, chemin, estRtl, textes, type Langue } from '../i18n';
+
+interface Props {
+  langue: Langue;
+  /** Pour une page de document : son chemin (« privacy »), son titre et sa
+   *  description. L'accueil n'en passe aucun. */
+  page?: string;
+  titre?: string;
+  description?: string;
+  /** Une page qu'on ne doit ni indexer ni annoncer dans les autres langues
+   *  (l'invitation : son contenu est dans l'adresse, propre à chacun). */
+  privee?: boolean;
+}
+const { langue, page = '', titre, description, privee = false } = Astro.props;
+const t = textes(langue);
+const site = Astro.site ?? new URL('https://drop.dropletmesh.app');
+const urlPage = new URL(chemin(langue, page), site);
+const titreComplet = !titre ? t.metaTitre : titre.includes('Droplet Drop') ? titre : `${titre} · Droplet Drop`;
+const descriptionPage = description ?? t.metaDescription;
+---
+<!doctype html>
+<html lang={langue} dir={estRtl(langue) ? 'rtl' : 'ltr'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{titreComplet}</title>
+    <meta name="description" content={descriptionPage} />
+    <meta name="theme-color" content="#080c16" />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="icon" href={`${BASE}/favicon-32.png`} sizes="32x32" type="image/png" />
+    <link rel="icon" href={`${BASE}/favicon-192.png`} sizes="192x192" type="image/png" />
+    <link rel="apple-touch-icon" href={`${BASE}/apple-touch-icon.png`} />
+    {privee ? <meta name="robots" content="noindex" /> : (
+      <>
+        <link rel="canonical" href={urlPage} />
+        {LANGUES.map((l) => (
+          <link rel="alternate" hreflang={l.code} href={new URL(chemin(l.code, page), site)} />
+        ))}
+        <link rel="alternate" hreflang="x-default" href={new URL(chemin('fr', page), site)} />
+      </>
+    )}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Droplet Drop" />
+    <meta property="og:title" content={titreComplet} />
+    <meta property="og:description" content={descriptionPage} />
+    {!privee && <meta property="og:url" content={urlPage} />}
+    <meta property="og:image" content={new URL(`${BASE}/apercu.png`, site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <slot />
+    <script>
+      import { preparerTelechargements } from '../scripts/plateforme';
+
+      // Les titres de section se lèvent une fois, quand ils entrent à l'écran.
+      const io = new IntersectionObserver(
+        (entrees) => {
+          for (const e of entrees) {
+            if (e.isIntersecting) {
+              e.target.classList.add('est-visible');
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { rootMargin: '0px 0px -12% 0px' },
+      );
+      document.querySelectorAll('.apparait').forEach((el) => io.observe(el));
+
+      // Chaque bouton « Télécharger » propose la version de CET appareil.
+      preparerTelechargements();
+    </script>
+  </body>
+</html>

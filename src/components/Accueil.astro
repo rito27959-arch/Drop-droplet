@@ -1,0 +1,34 @@
+---
+// La page d'accueil, dans une langue donnée. Le rythme de dropletmesh.app :
+// les sections alternent nuit et clair, et chacune ne dit qu'une chose.
+import Base from '../layouts/Base.astro';
+import Navigation from './Navigation.astro';
+import Hero from './Hero.astro';
+import PointsForts from './PointsForts.astro';
+import Gestes from './Gestes.astro';
+import GroupDrop from './GroupDrop.astro';
+import Securite from './Securite.astro';
+import Telecharger from './Telecharger.astro';
+import Questions from './Questions.astro';
+import Fin from './Fin.astro';
+import Pied from './Pied.astro';
+import { chemin, textes, type Langue } from '../i18n';
+
+interface Props { langue: Langue }
+const { langue } = Astro.props;
+const t = textes(langue);
+---
+<Base langue={langue}>
+  <Navigation t={t} accueil={chemin(langue)} />
+  <main>
+    <Hero t={t} />
+    <PointsForts t={t} />
+    <Gestes t={t} />
+    <GroupDrop t={t} />
+    <Securite t={t} langue={langue} />
+    <Telecharger t={t} />
+    <Questions t={t} langue={langue} />
+  </main>
+  <Fin t={t} />
+  <Pied t={t} langue={langue} />
+</Base>

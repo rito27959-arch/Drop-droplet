@@ -1,0 +1,82 @@
+---
+// Un ordinateur portable, dessiné en CSS : l'écran à bord fin, la caméra,
+// et le plateau d'aluminium vu de face. Comme le téléphone, il porte
+// n'importe quel écran et reste net à toutes les tailles.
+interface Props {
+  /** Largeur de l'écran (toute longueur CSS). */
+  largeur?: string;
+  class?: string;
+}
+const { largeur = '640px', class: classe = '' } = Astro.props;
+---
+<div class={`portable ${classe}`} style={`--l:${largeur}`} aria-hidden="true">
+  <div class="portable__couvercle">
+    <div class="portable__ecran">
+      <slot />
+      <span class="portable__reflet"></span>
+    </div>
+    <span class="portable__camera"></span>
+  </div>
+  <div class="portable__plateau"><span></span></div>
+</div>
+
+<style>
+  .portable {
+    position: relative;
+    width: var(--l);
+  }
+  .portable__couvercle {
+    position: relative;
+    aspect-ratio: 16 / 10.4;
+    padding: calc(var(--l) * 0.018);
+    padding-top: calc(var(--l) * 0.026);
+    border-radius: calc(var(--l) * 0.032) calc(var(--l) * 0.032) calc(var(--l) * 0.008) calc(var(--l) * 0.008);
+    background: #0b0d12;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+      inset 0 0 0 calc(var(--l) * 0.003) #2a2d34;
+  }
+  .portable__ecran {
+    position: relative;
+    height: 100%;
+    border-radius: calc(var(--l) * 0.008);
+    overflow: hidden;
+    background: #000;
+  }
+  .portable__camera {
+    position: absolute;
+    top: calc(var(--l) * 0.009);
+    left: 50%;
+    width: calc(var(--l) * 0.008);
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: #1d2330;
+  }
+  .portable__reflet {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 40%);
+    pointer-events: none;
+  }
+  /* Le plateau : plus large que l'écran, une encoche pour ouvrir. */
+  .portable__plateau {
+    position: relative;
+    width: 116%;
+    margin-inline-start: -8%;
+    height: calc(var(--l) * 0.028);
+    border-radius: 0 0 calc(var(--l) * 0.04) calc(var(--l) * 0.04);
+    background: linear-gradient(180deg, #c7cbd3 0%, #9ca1ab 40%, #5d626c 100%);
+    box-shadow: 0 calc(var(--l) * 0.06) calc(var(--l) * 0.08) calc(var(--l) * -0.04) rgba(0, 0, 0, 0.7);
+  }
+  .portable__plateau span {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 14%;
+    height: 42%;
+    transform: translateX(-50%);
+    border-radius: 0 0 calc(var(--l) * 0.012) calc(var(--l) * 0.012);
+    background: linear-gradient(180deg, #8a8f99, #b4b8c0);
+  }
+</style>

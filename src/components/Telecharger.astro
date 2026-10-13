@@ -1,0 +1,156 @@
+---
+// TÉLÉCHARGER — une carte par plateforme. Celle de l'appareil du visiteur
+// s'allume (« Cet appareil »). Chaque carte dit honnêtement ce qu'il faut
+// savoir avant d'ouvrir le fichier : la version minimale, l'autorisation
+// que le système demandera, l'absence de signature quand c'est le cas.
+// L'iPhone est listé, sans bouton : « Bientôt », et pourquoi.
+import { TELECHARGEMENTS, TOUTES_LES_VERSIONS, type Plateforme } from '../config';
+import type { Textes } from '../i18n/fr';
+interface Props { t: Textes }
+const { t } = Astro.props;
+
+const ICONES: Record<Plateforme, string> = {
+  android: '<rect x="9" y="3" width="14" height="26" rx="3.5"/><path d="M14 25.5h4"/>',
+  ios: '<rect x="9" y="3" width="14" height="26" rx="4"/><path d="M14 6h4"/>',
+  windows: '<rect x="4" y="6" width="24" height="16" rx="2.5"/><path d="M12 27h8M16 22v5"/>',
+  macos: '<rect x="6.5" y="7" width="19" height="13" rx="2"/><path d="M3.5 24.5h25"/>',
+  linux: '<rect x="4" y="5" width="24" height="18" rx="2.5"/><path d="M9 11l4 3-4 3M15.5 17h6"/>',
+};
+const plateformes: { cle: Plateforme; nom: string; note: string; bouton: string }[] = [
+  { cle: 'android', nom: t.pAndroid, note: t.pAndroidNote, bouton: t.dlAndroid },
+  { cle: 'windows', nom: t.pWindows, note: t.pWindowsNote, bouton: t.dlWindows },
+  { cle: 'macos', nom: t.pMacos, note: t.pMacosNote, bouton: t.dlMacos },
+  { cle: 'linux', nom: t.pLinux, note: t.pLinuxNote, bouton: t.dlLinux },
+  { cle: 'ios', nom: t.pIos, note: t.pIosNote, bouton: t.bientot },
+];
+---
+<section id="telecharger" class="dl fond-blanc" aria-labelledby="dl-titre">
+  <div class="contenu--large">
+    <h2 id="dl-titre" class="titre-section dl__titre apparait">{t.dlTitre}</h2>
+    <p class="chapo dl__chapo">{t.dlTexte}</p>
+    <ul class="dl__grille">
+      {plateformes.map((p) => {
+        const lien = TELECHARGEMENTS[p.cle];
+        return (
+          <li class:list={['plateforme', { 'plateforme--bientot': !lien }]} data-plateforme={p.cle}>
+            <span class="plateforme__ici">{t.dlIci}</span>
+            <svg viewBox="0 0 32 32" aria-hidden="true" set:html={ICONES[p.cle]} />
+            <h3>{p.nom}</h3>
+            <p>{p.note}</p>
+            {lien ? (
+              <a class="bouton" href={lien}>{t.telecharger}</a>
+            ) : (
+              <span class="plateforme__bientot">{t.bientot}</span>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+    <p class="dl__toutes"><a class="lien-fleche" href={TOUTES_LES_VERSIONS}>{t.toutesVersions}</a></p>
+  </div>
+</section>
+
+<style>
+  .dl {
+    padding: clamp(88px, 11vw, 150px) 0;
+    text-align: center;
+  }
+  .dl__chapo {
+    margin-top: 14px;
+  }
+  .dl__grille {
+    list-style: none;
+    padding: 0;
+    margin: clamp(40px, 6vw, 64px) 0 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .plateforme {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 34px 20px 26px;
+    border-radius: 26px;
+    background: var(--gris);
+    text-align: center;
+    transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
+  }
+  .plateforme svg {
+    width: 46px;
+    height: 46px;
+    fill: none;
+    stroke: var(--encre);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .plateforme h3 {
+    margin-top: 16px;
+    font-size: var(--t-2);
+  }
+  .plateforme p {
+    margin: 8px 0 22px;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--encre-2);
+    flex: 1;
+  }
+  .plateforme .bouton {
+    min-height: 38px;
+    padding: 0 18px;
+    font-size: 0.9375rem;
+  }
+  .plateforme__bientot {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 0 18px;
+    border-radius: 99px;
+    box-shadow: inset 0 0 0 1px var(--trait-jour);
+    color: var(--encre-2);
+    font-size: 0.9375rem;
+  }
+  .plateforme--bientot svg {
+    stroke: var(--encre-2);
+  }
+  /* La plateforme du visiteur : un liseré liquide, et l'étiquette. */
+  .plateforme__ici {
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 3px 10px;
+    border-radius: 99px;
+    background: var(--liquide);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+  }
+  .plateforme:global(.est-ici) {
+    background: var(--blanc);
+    box-shadow:
+      inset 0 0 0 2px var(--goutte),
+      0 24px 48px -28px rgba(22, 139, 255, 0.6);
+  }
+  .plateforme:global(.est-ici) .plateforme__ici {
+    opacity: 1;
+  }
+  .dl__toutes {
+    margin-top: 36px;
+  }
+  @media (max-width: 1080px) {
+    .dl__grille {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      row-gap: 26px;
+    }
+  }
+  @media (max-width: 640px) {
+    .dl__grille {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,99 @@
+---
+// TROIS GESTES — comment on envoie, sans mode d'emploi. À gauche, le
+// téléphone qui reçoit la proposition ; à droite, les trois étapes,
+// numérotées comme celles de dropletmesh.app.
+import type { Textes } from '../i18n/fr';
+import Ecran from './Ecran.astro';
+import Telephone from './Telephone.astro';
+interface Props { t: Textes }
+const { t } = Astro.props;
+const etapes = [
+  { titre: t.etape1Titre, texte: t.etape1Texte },
+  { titre: t.etape2Titre, texte: t.etape2Texte },
+  { titre: t.etape3Titre, texte: t.etape3Texte },
+];
+---
+<section id="gestes" class="gestes fond-blanc" aria-labelledby="gestes-titre">
+  <div class="gestes__grille contenu">
+    <div class="gestes__tel">
+      <Telephone largeur="var(--l-tel)"><Ecran t={t} vue="offre" /></Telephone>
+    </div>
+    <div>
+      <h2 id="gestes-titre" class="titre-section apparait">{t.commentTitre}</h2>
+      <ol class="etapes">
+        {etapes.map((e, i) => (
+          <li>
+            <span class="etapes__n">{i + 1}</span>
+            <div>
+              <h3>{e.titre}</h3>
+              <p>{e.texte}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .gestes {
+    --l-tel: clamp(230px, 26vw, 320px);
+    padding: clamp(88px, 11vw, 150px) 0;
+  }
+  .gestes__grille {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(40px, 8vw, 110px);
+    align-items: center;
+  }
+  .gestes__tel {
+    filter: drop-shadow(0 30px 50px rgba(11, 18, 32, 0.18));
+  }
+  .etapes {
+    list-style: none;
+    margin: clamp(30px, 4vw, 48px) 0 0;
+    padding: 0;
+    display: grid;
+    gap: 30px;
+  }
+  .etapes li {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 18px;
+  }
+  .etapes__n {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--liquide);
+    color: #fff;
+    font-family: var(--f-titre);
+    font-weight: 650;
+    font-size: 1.1rem;
+  }
+  .etapes h3 {
+    font-size: var(--t-2);
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+    padding-top: 9px;
+  }
+  .etapes p {
+    margin-top: 4px;
+    color: var(--encre-2);
+    max-width: 32rem;
+  }
+  @media (max-width: 820px) {
+    .gestes {
+      --l-tel: min(68vw, 300px);
+    }
+    .gestes__grille {
+      grid-template-columns: 1fr;
+    }
+    .gestes__tel {
+      justify-self: center;
+      order: 2;
+    }
+  }
+</style>

@@ -1,0 +1,32 @@
+---
+// LE LOGO DE DROPLET DROP — l'icône de l'application, telle quelle : la
+// goutte double, dans sa tuile de nuit. Une image, pas un tracé redessiné :
+// sur le site comme sur l'écran d'accueil du téléphone, c'est la même.
+//
+// `actif = false` : au repos (le fil d'Ariane du pied de page), en gris,
+// comme le logo de dropletmesh.app.
+import { BASE } from '../i18n';
+interface Props { taille?: number; actif?: boolean }
+const { taille = 28, actif = true } = Astro.props;
+const fichier = taille > 64 ? 'icone-256.webp' : 'icone-128.webp';
+---
+<img
+  class:list={['logo', { 'logo--repos': !actif }]}
+  src={`${BASE}/${fichier}`}
+  width={taille}
+  height={taille}
+  alt=""
+  decoding="async"
+  style={`--r: ${Math.round(taille * 0.235)}px`}
+/>
+
+<style>
+  .logo {
+    border-radius: var(--r);
+    flex: none;
+  }
+  .logo--repos {
+    filter: grayscale(1) contrast(0.9);
+    opacity: 0.7;
+  }
+</style>
