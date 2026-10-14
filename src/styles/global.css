@@ -7,28 +7,33 @@
    • Une couleur d'action : le dégradé liquide de Droplet Drop.
    • Inter Tight pour les titres, Inter pour le texte : la neutralité de SF
      Pro, dont le site ne peut pas se servir.
+   • Toutes ces valeurs viennent de Droplet Design (droplet-site/design),
+     la source commune aux apps et aux sites : droplet-design.css est
+     généré, on ne le modifie pas ici.
    ========================================================================== */
+
+@import './droplet-design.css';
 
 /* DROPLET LIQUID — les couleurs de l'application, et seulement elles.
    Le bleu électrique et son second ton cyan forment le dégradé « liquide »
    des actions ; l'indigo n'intervient que dans les lueurs. Les fonds sont
-   ceux de l'application : la nuit bleutée (#080C16) et le gris clair
-   (#F3F6FA) — pas le noir pur ni le gris d'Apple : Droplet Drop a sa
+   ceux de l'application : la nuit bleutée de la couche « scène » et le
+   gris clair (#F3F6FA) — pas le noir pur ni le gris d'Apple : Droplet Drop a sa
    propre lumière, la même sur le site et dans l'application. */
 :root {
-  --noir: #080c16;
+  --noir: var(--dd-scene-nuit);
   --nuit: #0e1420;
   --gris: #f3f6fa;
   --blanc: #fff;
   --encre: #0b1220;
   --encre-2: #55607a;
-  --clair: #f7f9fc;
-  --clair-2: #a5b0c1;
-  --clair-3: #6e7a8e;
+  --clair: var(--dd-scene-texte);
+  --clair-2: var(--dd-scene-texte-2);
+  --clair-3: var(--dd-scene-texte-3);
   --carte-sombre: #141b28;
   --carte-sombre-2: #202a39;
-  --goutte: #168bff;
-  --goutte-2: #34d8ff;
+  --goutte: var(--dd-drop);
+  --goutte-2: var(--dd-drop-2);
   --indigo: #4855e8;
   --liquide: linear-gradient(135deg, var(--goutte), var(--goutte-2));
   --goutte-fonce: #0f74e0;
@@ -36,35 +41,31 @@
   --lien-clair: #0864cc;
   --lien-sombre: #4da8ff;
 
-  --texte-nuit: #f7f9fc;
-  --texte-nuit-2: #a5b0c1;
+  --texte-nuit: var(--dd-scene-texte);
+  --texte-nuit-2: var(--dd-scene-texte-2);
   --texte-jour: #0b1220;
   --texte-jour-2: #55607a;
   --trait-nuit: rgba(255, 255, 255, 0.1);
   --trait-jour: rgba(11, 18, 32, 0.1);
   --brume: #f3f6fa;
 
-  --f-titre: 'Inter Tight Variable', 'Inter Tight', -apple-system, BlinkMacSystemFont, 'SF Pro Display',
-    'Segoe UI', 'Noto Sans', 'Noto Sans Arabic', 'Noto Sans Devanagari', 'PingFang SC',
-    'Microsoft YaHei', sans-serif;
-  --f-texte: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI',
-    'Noto Sans', 'Noto Sans Arabic', 'Noto Sans Devanagari', 'PingFang SC', 'Microsoft YaHei',
-    sans-serif;
+  --f-titre: var(--dd-f-titres);
+  --f-texte: var(--dd-f-texte);
 
   /* L'échelle d'apple.com : 17 / 21 / 28 / 40 / 56 / 80. */
-  --t-0: 0.8125rem;
-  --t-1: 1.0625rem;
-  --t-2: clamp(1.1875rem, 1rem + 0.5vw, 1.3125rem);
-  --t-3: clamp(1.5rem, 1.1rem + 1.2vw, 1.75rem);
-  --t-4: clamp(2rem, 1.2rem + 2.6vw, 3.5rem);
-  --t-5: clamp(2.75rem, 1.3rem + 5vw, 5rem);
-  --t-6: clamp(3.2rem, 1rem + 8vw, 7.5rem);
+  --t-0: var(--dd-t0);
+  --t-1: var(--dd-t1);
+  --t-2: var(--dd-t2);
+  --t-3: var(--dd-t3);
+  --t-4: var(--dd-t4);
+  --t-5: var(--dd-t5);
+  --t-6: var(--dd-t6);
 
   --largeur: 980px;
   --large: 1260px;
   --gouttiere: clamp(20px, 5vw, 40px);
-  --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
-  --ease-sortie: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease: var(--dd-courbe);
+  --ease-sortie: var(--dd-sortie);
 }
 
 *,
