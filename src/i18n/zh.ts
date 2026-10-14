@@ -123,6 +123,7 @@ export const zh: Textes = {
   invEtape2: '打开 Group Drop，然后点按“加入分发”。',
   invEtape3: '点按“粘贴链接”：邀请已经复制好了。',
   invCopier: '复制邀请',
+  invOuvrir: '我已安装：在 Droplet Drop 中打开',
   invCopie: '邀请已复制',
   invMemeReseau: '请与分发者保持在同一网络中：文件直接来自对方的设备。',
   invPrive: '邀请只保留在你的设备上：地址中“#”之后的部分从不会发送到我们的服务器。',

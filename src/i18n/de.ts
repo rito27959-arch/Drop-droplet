@@ -126,6 +126,7 @@ export const de: Textes = {
   invEtape2: 'Öffne Group Drop, dann Einer Verteilung beitreten.',
   invEtape3: 'Tippe auf Link einfügen: Die Einladung ist schon kopiert.',
   invCopier: 'Einladung kopieren',
+  invOuvrir: 'Ich habe die App schon: in Droplet Drop öffnen',
   invCopie: 'Einladung kopiert',
   invMemeReseau: 'Bleib im selben Netzwerk wie die Person, die teilt: Die Dateien kommen direkt von ihrem Gerät.',
   invPrive: 'Die Einladung bleibt auf deinem Gerät: Der Teil der Adresse nach „#“ wird nie an unseren Server gesendet.',

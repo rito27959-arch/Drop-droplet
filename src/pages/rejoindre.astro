@@ -18,7 +18,7 @@ import { LANGUES, chemin, textes } from '../i18n';
 const t = textes('fr');
 const CLES = [
   'invTitre', 'invDe', 'invExpire', 'invExpiree', 'invInvalide', 'invEtape1', 'invEtape2', 'invEtape3',
-  'invCopier', 'invCopie', 'invMemeReseau', 'invPrive', 'telecharger', 'dlAndroid', 'dlWindows', 'dlMacos',
+  'invCopier', 'invCopie', 'invOuvrir', 'invMemeReseau', 'invPrive', 'telecharger', 'dlAndroid', 'dlWindows', 'dlMacos',
   'dlLinux', 'dlIos', 'toutesPlateformes',
 ] as const;
 const dictionnaires = Object.fromEntries(
@@ -61,6 +61,9 @@ const dictionnaires = Object.fromEntries(
         </li>
       </ol>
 
+      <!-- L'app est déjà là (lien ouvert dans le navigateur parce
+           qu'Android ne l'a pas confié à l'app) : on la lui confie. -->
+      <a class="bouton bouton--verre inv__ouvrir" href="dropletdrop://rejoindre" data-ouvrir data-t="invOuvrir">{t.invOuvrir}</a>
       <p class="inv__note" data-t="invMemeReseau">{t.invMemeReseau}</p>
       <p class="inv__note inv__note--prive">
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
@@ -117,6 +120,12 @@ const dictionnaires = Object.fromEntries(
   .inv__quand {
     margin-top: 4px;
     color: var(--clair-2);
+  }
+  .inv__ouvrir {
+    margin-top: 28px;
+  }
+  .inv__ouvrir[hidden] {
+    display: none;
   }
   .inv__quand.est-expiree {
     color: #ffb340;
@@ -282,6 +291,13 @@ const dictionnaires = Object.fromEntries(
   }
 
   // Copier : l'adresse entière, telle que l'application sait la lire.
+  // « Ouvrir dans Droplet Drop » : la même invitation, par le lien propre à
+  // l'app (Android et ordinateurs la reconnaissent s'il est installé).
+  const ouvrir = document.querySelector<HTMLAnchorElement>('[data-ouvrir]');
+  if (ouvrir) {
+    if (location.hash.length > 1) ouvrir.href = `dropletdrop://rejoindre${location.hash}`;
+    else ouvrir.hidden = true;
+  }
   const copier = document.querySelector<HTMLButtonElement>('[data-copier]')!;
   copier.addEventListener('click', async () => {
     try {

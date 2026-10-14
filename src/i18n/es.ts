@@ -126,6 +126,7 @@ export const es: Textes = {
   invEtape2: 'Abre Group Drop y luego Unirse a una distribución.',
   invEtape3: 'Toca Pegar un enlace: la invitación ya está copiada.',
   invCopier: 'Copiar la invitación',
+  invOuvrir: 'Ya tengo la app: abrir en Droplet Drop',
   invCopie: 'Invitación copiada',
   invMemeReseau: 'Quédate en la misma red que quien comparte: los archivos llegan directamente desde su dispositivo.',
   invPrive: 'La invitación se queda en tu dispositivo: la parte de la dirección después de «#» nunca se envía a nuestro servidor.',

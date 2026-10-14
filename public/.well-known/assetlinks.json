@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.dropletmesh.droplet_drop",
+      "sha256_cert_fingerprints": ["07:0E:D3:67:B1:46:F2:3D:89:54:2D:FB:D4:BB:BB:29:8F:88:76:B0:8B:30:13:19:78:04:08:22:C5:F5:5B:82"]
+    }
+  }
+]

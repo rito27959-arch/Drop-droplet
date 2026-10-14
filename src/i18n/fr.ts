@@ -136,6 +136,7 @@ export const fr = {
   invEtape2: 'Ouvrez Group Drop, puis Rejoindre une distribution.',
   invEtape3: 'Touchez Coller un lien : l’invitation est déjà copiée.',
   invCopier: 'Copier l’invitation',
+  invOuvrir: 'J’ai déjà l’app : ouvrir dans Droplet Drop',
   invCopie: 'Invitation copiée',
   invMemeReseau: "Restez sur le même réseau que la personne qui distribue : les fichiers viennent directement de son appareil.",
   invPrive: "Le contenu de l'invitation reste sur votre appareil : la partie de l'adresse après « # » n'est jamais envoyée à notre serveur.",
