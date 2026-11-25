@@ -1,6 +1,4 @@
 ---
-import '@fontsource-variable/inter-tight';
-import '@fontsource-variable/inter';
 import '../styles/global.css';
 import { BASE, LANGUES, chemin, estRtl, textes, type Langue } from '../i18n';
 
@@ -29,8 +27,9 @@ const descriptionPage = description ?? t.metaDescription;
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{titreComplet}</title>
     <meta name="description" content={descriptionPage} />
-    <meta name="theme-color" content="#05070c" />
-    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#e6eaee" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#05070a" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
     <link rel="icon" href={`${BASE}/favicon-32.png`} sizes="32x32" type="image/png" />
     <link rel="icon" href={`${BASE}/favicon-192.png`} sizes="192x192" type="image/png" />
     <link rel="apple-touch-icon" href={`${BASE}/apple-touch-icon.png`} />
@@ -50,25 +49,21 @@ const descriptionPage = description ?? t.metaDescription;
     {!privee && <meta property="og:url" content={urlPage} />}
     <meta property="og:image" content={new URL(`${BASE}/apercu.png`, site)} />
     <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preload" href="/fonts/commissioner.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Le thème, posé AVANT le premier affichage : choix mémorisé, sinon celui du système. -->
+    <script is:inline>
+      (function () {
+        var t = null;
+        try { t = localStorage.getItem('theme'); } catch (e) {}
+        if (t !== 'dark' && t !== 'light') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
   </head>
   <body>
     <slot />
     <script>
       import { preparerTelechargements } from '../scripts/plateforme';
-
-      // Les titres de section se lèvent une fois, quand ils entrent à l'écran.
-      const io = new IntersectionObserver(
-        (entrees) => {
-          for (const e of entrees) {
-            if (e.isIntersecting) {
-              e.target.classList.add('est-visible');
-              io.unobserve(e.target);
-            }
-          }
-        },
-        { rootMargin: '0px 0px -12% 0px' },
-      );
-      document.querySelectorAll('.apparait').forEach((el) => io.observe(el));
 
       // Chaque bouton « Télécharger » propose la version de CET appareil.
       preparerTelechargements();

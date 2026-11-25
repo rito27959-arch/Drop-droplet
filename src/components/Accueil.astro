@@ -1,45 +1,736 @@
 ---
-// La page d'accueil, dans une langue donnée. Le rythme de dropletmesh.app :
-// les sections alternent nuit et clair, et chacune ne dit qu'une chose.
+// LA PAGE D'ACCUEIL de Droplet Drop, dans une langue donnée — Droplet Design Language.
+// Le gabarit commun des pages produit (le même que dropletmesh.app) :
+//   1 héros · 2 points forts · 3 démonstration (trois gestes) · 4 Group Drop
+//   5 sécurité · 6 télécharger · 7 la famille Droplet · 8 questions · 9 fin.
+// Une seule animation forte : la démonstration, pilotée par le défilement (CSS).
 import Base from '../layouts/Base.astro';
 import Navigation from './Navigation.astro';
-import Hero from './Hero.astro';
-import PointsForts from './PointsForts.astro';
-import Gestes from './Gestes.astro';
-import GroupDrop from './GroupDrop.astro';
-import Securite from './Securite.astro';
-import Telecharger from './Telecharger.astro';
-import Questions from './Questions.astro';
-import Famille from '../famille/Famille.astro';
-import { famille } from '../famille/textes';
-import Fin from './Fin.astro';
+import Ecran from './Ecran.astro';
+import BoutonTelecharger from './BoutonTelecharger.astro';
 import Pied from './Pied.astro';
-import { BASE, chemin, textes, type Langue } from '../i18n';
-import { SITE_DROPLET } from '../config';
+import { famille } from '../famille/textes';
+import { SITE_DROPLET, TELECHARGEMENTS, TOUTES_LES_VERSIONS, type Plateforme } from '../config';
+import { chemin, textes, type Langue } from '../i18n';
 
 interface Props { langue: Langue }
 const { langue } = Astro.props;
 const t = textes(langue);
 const f = famille[langue];
-// Les liens de la famille, vus depuis drop.dropletmesh.app.
-const liensFamille = {
-  droplet: { href: langue === 'fr' ? `${SITE_DROPLET}/` : `${SITE_DROPLET}/${langue}/`, texte: `${f.decouvrir} Droplet` },
-  web: { href: 'https://web.dropletmesh.app', texte: f.ouvrirWeb },
-  drop: { href: '#telecharger', texte: f.telecharger, principal: true },
-};
+const accueil = chemin(langue);
+
+const points = [
+  { titre: t.pf1Titre, texte: t.pf1Texte },
+  { titre: t.pf2Titre, texte: t.pf2Texte },
+  { titre: t.pf3Titre, texte: t.pf3Texte },
+  { titre: t.pf4Titre, texte: t.pf4Texte },
+  { titre: t.pf5Titre, texte: t.pf5Texte },
+  { titre: t.pf6Titre, texte: t.pf6Texte },
+];
+const etapes = [
+  { titre: t.etape1Titre, texte: t.etape1Texte },
+  { titre: t.etape2Titre, texte: t.etape2Texte },
+  { titre: t.etape3Titre, texte: t.etape3Texte },
+];
+const etapesGd = [
+  { titre: t.gd1Titre, texte: t.gd1Texte },
+  { titre: t.gd2Titre, texte: t.gd2Texte },
+  { titre: t.gd3Titre, texte: t.gd3Texte },
+];
+const garanties = [
+  { titre: t.sec1Titre, texte: t.sec1Texte },
+  { titre: t.sec2Titre, texte: t.sec2Texte },
+  { titre: t.sec3Titre, texte: t.sec3Texte },
+];
+const plateformes: { cle: Plateforme; nom: string; note: string }[] = [
+  { cle: 'android', nom: t.pAndroid, note: t.pAndroidNote },
+  { cle: 'windows', nom: t.pWindows, note: t.pWindowsNote },
+  { cle: 'macos', nom: t.pMacos, note: t.pMacosNote },
+  { cle: 'linux', nom: t.pLinux, note: t.pLinuxNote },
+  { cle: 'ios', nom: t.pIos, note: t.pIosNote },
+];
+const questions = [
+  { q: t.q1, r: t.r1 },
+  { q: t.q2, r: t.r2 },
+  { q: t.q3, r: t.r3 },
+  { q: t.q4, r: t.r4 },
+  { q: t.q5, r: t.r5 },
+];
+const apps = [
+  { nom: 'Droplet', accroche: f.dropletAccroche, texte: f.dropletTexte, plateformes: f.dropletPlateformes, lien: { href: langue === 'fr' ? `${SITE_DROPLET}/` : `${SITE_DROPLET}/${langue}/`, texte: `${f.decouvrir} Droplet` } },
+  { nom: 'Droplet Web', accroche: f.webAccroche, texte: f.webTexte, plateformes: f.webPlateformes, lien: { href: 'https://web.dropletmesh.app', texte: f.ouvrirWeb } },
+  { nom: 'Droplet Drop', accroche: f.dropAccroche, texte: f.dropTexte, plateformes: f.dropPlateformes, ici: true },
+];
+// Les blocs d'un envoi, sur le schéma de la démonstration.
+const blocs = [0, 1, 2, 3, 4];
 ---
 <Base langue={langue}>
-  <Navigation t={t} accueil={chemin(langue)} />
+  <Navigation t={t} accueil={accueil} langue={langue} />
   <main>
-    <Hero t={t} />
-    <PointsForts t={t} />
-    <Gestes t={t} />
-    <GroupDrop t={t} />
-    <Securite t={t} langue={langue} />
-    <Telecharger t={t} />
-    <Famille langue={langue} ici="drop" liens={liensFamille} iconeDrop={`${BASE}/famille-drop.webp`} racine="https://dropletmesh.app" />
-    <Questions t={t} langue={langue} />
+    <!-- 1. Héros -->
+    <section class="heros contenu--large" aria-labelledby="titre">
+      <div class="heros__texte">
+        <h1 id="titre" class="display revele">{t.heroTitre}</h1>
+        <p class="chapo revele">{t.heroTexte}</p>
+        <div class="boutons revele">
+          <BoutonTelecharger t={t} />
+          <a class="bouton bouton--secondaire" href="#gestes">{t.enSavoirPlus}</a>
+        </div>
+        <p class="caption revele">{t.heroNote}</p>
+      </div>
+      <div class="heros__ecran" aria-hidden="true">
+        <div class="cadre"><Ecran t={t} vue="accueil" /></div>
+      </div>
+    </section>
+
+    <!-- 2. Points forts -->
+    <section class="section contenu--large" id="points-forts" aria-labelledby="titre-pf">
+      <h2 id="titre-pf" class="headline">{t.pfTitre}</h2>
+      <ul class="grille-filets grille-filets--3">
+        {points.map((p) => (
+          <li>
+            <h3 class="subtitle">{p.titre}</h3>
+            <p class="body doux">{p.texte}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- 3. Démonstration : trois gestes, d'un appareil à l'autre -->
+    <section class="demo" id="gestes" aria-labelledby="titre-gestes">
+      <div class="demo__colle contenu--large">
+        <h2 id="titre-gestes" class="headline">{t.commentTitre}</h2>
+        <ol class="demo__etapes">
+          {etapes.map((e, i) => (
+            <li class={`etape e${i + 1}`}>
+              <span class="technique doux">{i + 1}</span>
+              <span><strong>{e.titre}.</strong> {e.texte}</span>
+            </li>
+          ))}
+        </ol>
+        <svg class="demo__schema" viewBox="0 0 1000 250" role="img" aria-label={t.commentTitre}>
+          <path class="wifi" d="M150 112 Q 500 10 850 112" />
+          <text class="wifi__mot" x="500" y="44" text-anchor="middle">Wi‑Fi</text>
+          <line class="liaison" x1="150" y1="150" x2="850" y2="150" />
+          <g class="appareil depart" transform="translate(150 150)"><rect x="-34" y="-24" width="68" height="44" rx="6" /><path d="M-44 28h88" /></g>
+          <g class="appareil arrivee" transform="translate(850 150)"><rect x="-34" y="-28" width="68" height="44" rx="5" /><path d="M-12 26h24M0 16v10" /></g>
+          {blocs.map((i) => (
+            <g class={`bloc b${i}`} style={`--i:${i}`}><rect x={126 + i * 10} y="140" width="8" height="20" rx="2" /></g>
+          ))}
+          <path class="coche" d="M834 148l11 11 21-24" />
+          <text class="nom" x="150" y="214" text-anchor="middle">{t.ecPortable}</text>
+          <text class="nom" x="850" y="214" text-anchor="middle">{t.ecBureau}</text>
+          <text class="verifie" x="900" y="250" text-anchor="end">{t.ecVerifie}</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- 4. Group Drop -->
+    <section class="section contenu--large gd" id="group-drop" aria-labelledby="titre-gd">
+      <div>
+        <h2 id="titre-gd" class="headline">{t.gdTitre}</h2>
+        <p class="chapo">{t.gdTexte}</p>
+      </div>
+      <figure class="salle" aria-hidden="true">
+        <p class="caption">{t.gdHote}</p>
+        <div class="salle__grille">
+          {Array.from({ length: 30 }, () => <span></span>)}
+        </div>
+        <p class="technique"><b>30</b> {t.gdAppareils}</p>
+      </figure>
+      <ol class="grille-filets grille-filets--3 gd__etapes">
+        {etapesGd.map((e, i) => (
+          <li>
+            <span class="technique doux">{i + 1}</span>
+            <h3 class="subtitle">{e.titre}</h3>
+            <p class="body doux">{e.texte}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <!-- 5. Sécurité -->
+    <section class="section contenu--large securite" id="securite" aria-labelledby="titre-sec">
+      <div>
+        <h2 id="titre-sec" class="headline">{t.secTitre}</h2>
+        <p class="chapo">{t.secTexte}</p>
+        <a class="lien" href={chemin(langue, 'security')}>{t.secPlus}</a>
+      </div>
+      <figure class="offre">
+        <div>
+          <p class="subtitle">{t.ecOffreTitre}</p>
+          <p class="body doux">{t.ecOffreQuoi}</p>
+        </div>
+        <p class="technique offre__code" dir="ltr">{t.ecCode}</p>
+        <div class="offre__actions" aria-hidden="true">
+          <span class="bouton bouton--secondaire bouton--petit">{t.ecRefuser}</span>
+          <span class="bouton bouton--petit">{t.ecAccepter}</span>
+        </div>
+      </figure>
+      <ul class="grille-filets grille-filets--3 securite__garanties">
+        {garanties.map((g) => (
+          <li>
+            <h3 class="subtitle">{g.titre}</h3>
+            <p class="body doux">{g.texte}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- 6. Télécharger : une ligne par plateforme ; celle du visiteur est marquée. -->
+    <section class="section contenu--large" id="telecharger" aria-labelledby="titre-dl">
+      <h2 id="titre-dl" class="headline">{t.dlTitre}</h2>
+      <p class="chapo">{t.dlTexte}</p>
+      <ul class="plateformes">
+        {plateformes.map((p) => {
+          const lien = TELECHARGEMENTS[p.cle];
+          return (
+            <li class="plateforme" data-plateforme={p.cle}>
+              <div>
+                <p class="subtitle">{p.nom}</p>
+                <p class="caption plateforme__ici">{t.dlIci}</p>
+              </div>
+              <p class="body doux">{p.note}</p>
+              {lien ? <a class="bouton bouton--petit" href={lien}>{t.telecharger}</a> : <p class="caption">{t.bientot}</p>}
+            </li>
+          );
+        })}
+      </ul>
+      <a class="lien plateformes__toutes" href={TOUTES_LES_VERSIONS}>{t.toutesVersions}</a>
+    </section>
+
+    <!-- 7. La famille Droplet -->
+    <section class="section contenu--large" id="famille" aria-labelledby="titre-famille">
+      <h2 id="titre-famille" class="headline">{f.titre}</h2>
+      <p class="chapo">{f.chapo}</p>
+      <ul class="apps">
+        {apps.map((a) => (
+          <li class="app">
+            <p class="title">{a.nom}</p>
+            <div>
+              <p class="subtitle">{a.accroche}</p>
+              <p class="body doux">{a.texte}</p>
+              <p class="technique doux">{a.plateformes}</p>
+            </div>
+            {a.ici ? <p class="caption app__ici">{f.ici}</p> : <a class="lien app__lien" href={a.lien!.href}>{a.lien!.texte}</a>}
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- 8. Questions -->
+    <section class="section contenu--large questions" id="questions" aria-labelledby="titre-questions">
+      <div>
+        <h2 id="titre-questions" class="headline">{t.faqTitre}</h2>
+        <a class="lien" href={chemin(langue, 'support')}>{t.faqToutes}</a>
+      </div>
+      <div>
+        {questions.map((q) => (
+          <details>
+            <summary class="subtitle">{q.q}</summary>
+            <p class="body doux">{q.r}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <!-- 9. Fin -->
+    <section class="section contenu--large fin" aria-labelledby="titre-fin">
+      <h2 id="titre-fin" class="headline">{t.finTitre}</h2>
+      <p class="chapo">{t.finTexte}</p>
+      <div class="boutons">
+        <BoutonTelecharger t={t} />
+      </div>
+      <p class="caption">{t.heroNote}</p>
+    </section>
   </main>
-  <Fin t={t} />
   <Pied t={t} langue={langue} />
 </Base>
+
+<style>
+  .boutons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--e-3);
+    margin-top: var(--e-6);
+  }
+
+  /* 1. Héros */
+  .heros {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    gap: var(--e-8);
+    align-items: center;
+    padding-top: var(--e-8);
+  }
+  .heros__texte .chapo {
+    margin-top: var(--e-5);
+  }
+  .heros__texte .caption {
+    margin-top: var(--e-4);
+  }
+  .heros__ecran {
+    justify-self: center;
+  }
+  /* L'écran de l'application, tel qu'il est : sa propre nuit, quel que soit le thème. */
+  .cadre {
+    --l: 320px;
+    position: relative;
+    width: var(--l);
+    aspect-ratio: 9 / 19.5;
+    border-radius: 36px;
+    overflow: hidden;
+    border: 1px solid var(--trait);
+  }
+  /* Une seule fois, à l'ouverture : où commencer à lire. */
+  .revele {
+    animation: revele 400ms var(--sortie) both;
+  }
+  .revele:nth-child(2) {
+    animation-delay: 50ms;
+  }
+  .revele:nth-child(3) {
+    animation-delay: 90ms;
+  }
+  .revele:nth-child(4) {
+    animation-delay: 120ms;
+  }
+  @keyframes revele {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  /* Listes à filets : séparées par l'espace et un trait d'un pixel. */
+  .grille-filets {
+    list-style: none;
+    margin: var(--e-7) 0 0;
+    padding: 0;
+    display: grid;
+    border-top: 1px solid var(--trait);
+  }
+  .grille-filets--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .grille-filets li {
+    display: grid;
+    gap: var(--e-2);
+    align-content: start;
+    padding: var(--e-5) var(--e-5) var(--e-6) 0;
+  }
+  .grille-filets li + li {
+    padding-inline-start: var(--e-5);
+    border-inline-start: 1px solid var(--trait);
+  }
+  .grille-filets--3 li:nth-child(3n + 1) {
+    border-inline-start: 0;
+    padding-inline-start: 0;
+  }
+  .grille-filets--3 li:nth-child(n + 4) {
+    border-top: 1px solid var(--trait);
+  }
+
+  /* 3. Démonstration — sans prise en charge du défilement, tout se lit d'un coup. */
+  .demo {
+    margin-top: var(--e-9);
+    padding-block: var(--e-8);
+    background: var(--surface);
+    border-block: 1px solid var(--trait);
+  }
+  .demo__colle {
+    display: grid;
+    gap: var(--e-6);
+  }
+  .demo__etapes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--e-3);
+    max-width: 64ch;
+  }
+  .etape {
+    display: flex;
+    gap: var(--e-3);
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  .etape strong {
+    font-weight: 650;
+  }
+  .demo__schema {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .wifi {
+    fill: none;
+    stroke: var(--encre-douce);
+    stroke-width: 1.5;
+    stroke-dasharray: 3 8;
+    stroke-linecap: round;
+  }
+  .wifi__mot {
+    font: 450 14px var(--police-mono);
+    fill: var(--encre-douce);
+  }
+  .liaison {
+    stroke: var(--trait);
+    stroke-width: 2;
+  }
+  .appareil rect,
+  .appareil path {
+    fill: var(--surface);
+    stroke: var(--encre);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+  .bloc rect {
+    fill: var(--encre);
+  }
+  /* Sans animation : les blocs sont arrivés, et vérifiés. */
+  .bloc {
+    transform: translateX(680px);
+    opacity: 0;
+  }
+  .coche {
+    fill: none;
+    stroke: var(--encre);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .nom {
+    font: 600 16px var(--police);
+    fill: var(--encre);
+  }
+  .verifie {
+    font: 450 13px var(--police-mono);
+    fill: var(--encre-douce);
+  }
+  :global([dir='rtl']) .demo__schema {
+    transform: scaleX(-1);
+  }
+  :global([dir='rtl']) .demo__schema text {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scaleX(-1);
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .demo {
+        height: 300vh;
+        padding: 0;
+        view-timeline-name: --demo;
+      }
+      .demo__colle {
+        position: sticky;
+        top: 64px;
+        height: calc(100svh - 64px);
+        align-content: center;
+      }
+      .demo__etapes {
+        display: grid;
+        min-height: 4.6em;
+      }
+      .etape {
+        grid-area: 1 / 1;
+      }
+      .e1,
+      .e2,
+      .e3,
+      .bloc,
+      .liaison,
+      .arrivee rect,
+      .coche,
+      .verifie {
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: --demo;
+        animation-range: contain 0% contain 100%;
+      }
+      .e1 { animation-name: e1; }
+      .e2 { animation-name: e2; }
+      .e3 { animation-name: e3; }
+      .bloc { animation-name: bloc; }
+      .liaison { animation-name: liaison; }
+      .arrivee rect { animation-name: arrivee; }
+      .coche { animation-name: coche; }
+      .verifie { animation-name: verifie; }
+      /* Chaque bloc part un peu après le précédent. */
+      .b1 { animation-name: bloc1; }
+      .b2 { animation-name: bloc2; }
+      .b3 { animation-name: bloc3; }
+      .b4 { animation-name: bloc4; }
+    }
+  }
+  @keyframes e1 {
+    0%, 28% { opacity: 1; transform: none; }
+    33%, 100% { opacity: 0; transform: translateY(-8px); }
+  }
+  @keyframes e2 {
+    0%, 31% { opacity: 0; transform: translateY(8px); }
+    36%, 58% { opacity: 1; transform: none; }
+    63%, 100% { opacity: 0; transform: translateY(-8px); }
+  }
+  @keyframes e3 {
+    0%, 61% { opacity: 0; transform: translateY(8px); }
+    66%, 100% { opacity: 1; transform: none; }
+  }
+  /* 1 : les fichiers apparaissent sur le portable. */
+  @keyframes bloc {
+    0% { transform: none; opacity: 0; }
+    8%, 62% { transform: none; opacity: 1; }
+    80% { transform: translateX(680px); opacity: 1; }
+    83%, 100% { transform: translateX(680px); opacity: 0; }
+  }
+  @keyframes bloc1 {
+    0%, 2% { transform: none; opacity: 0; }
+    10%, 64% { transform: none; opacity: 1; }
+    82% { transform: translateX(680px); opacity: 1; }
+    85%, 100% { transform: translateX(680px); opacity: 0; }
+  }
+  @keyframes bloc2 {
+    0%, 4% { transform: none; opacity: 0; }
+    12%, 66% { transform: none; opacity: 1; }
+    84% { transform: translateX(680px); opacity: 1; }
+    87%, 100% { transform: translateX(680px); opacity: 0; }
+  }
+  @keyframes bloc3 {
+    0%, 6% { transform: none; opacity: 0; }
+    14%, 68% { transform: none; opacity: 1; }
+    86% { transform: translateX(680px); opacity: 1; }
+    89%, 100% { transform: translateX(680px); opacity: 0; }
+  }
+  @keyframes bloc4 {
+    0%, 8% { transform: none; opacity: 0; }
+    16%, 70% { transform: none; opacity: 1; }
+    88% { transform: translateX(680px); opacity: 1; }
+    91%, 100% { transform: translateX(680px); opacity: 0; }
+  }
+  /* 2 : on touche l'appareil ; le lien s'établit. */
+  @keyframes liaison {
+    0%, 36% { stroke: var(--trait); }
+    42%, 100% { stroke: var(--encre); }
+  }
+  @keyframes arrivee {
+    0%, 36% { stroke: var(--encre-douce); }
+    42%, 100% { stroke: var(--encre); }
+  }
+  /* 3 : tout est arrivé, vérifié. */
+  @keyframes coche {
+    0%, 89% { opacity: 0; }
+    93%, 100% { opacity: 1; }
+  }
+  @keyframes verifie {
+    0%, 89% { opacity: 0; }
+    93%, 100% { opacity: 1; }
+  }
+
+  /* 4. Group Drop */
+  .gd,
+  .securite {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    gap: var(--e-6) var(--e-8);
+    align-items: start;
+  }
+  .gd .chapo,
+  .securite .chapo {
+    margin: var(--e-5) 0 var(--e-4);
+  }
+  .salle,
+  .offre {
+    margin: 0;
+    display: grid;
+    gap: var(--e-4);
+    padding: var(--e-5);
+    border: 1px solid var(--trait);
+    border-radius: var(--r-carte);
+    background: var(--surface);
+  }
+  .salle__grille {
+    display: grid;
+    max-width: 320px;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 8px;
+  }
+  .salle__grille span {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 2px solid var(--encre);
+    background: var(--encre);
+  }
+  .salle .technique b {
+    font-weight: 650;
+  }
+  .gd__etapes,
+  .securite__garanties {
+    grid-column: 1 / -1;
+    margin-top: var(--e-4);
+  }
+
+  /* 5. Sécurité */
+  .offre__code {
+    padding-block: var(--e-3);
+    border-block: 1px solid var(--trait);
+  }
+  .offre__actions {
+    display: flex;
+    gap: var(--e-2);
+    justify-content: flex-end;
+  }
+  .offre__actions .bouton {
+    cursor: default;
+  }
+
+  /* 6. Télécharger */
+  #telecharger .chapo,
+  #famille .chapo {
+    margin-top: var(--e-4);
+  }
+  .plateformes {
+    list-style: none;
+    margin: var(--e-7) 0 var(--e-5);
+    padding: 0;
+    border-top: 1px solid var(--trait);
+  }
+  .plateforme {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr);
+    gap: var(--e-5);
+    align-items: start;
+    padding: var(--e-5) 0;
+    border-bottom: 1px solid var(--trait);
+  }
+  .plateforme > :last-child {
+    justify-self: end;
+  }
+  .plateforme__ici {
+    display: none;
+    margin-top: var(--e-1);
+  }
+  .plateforme:global(.est-ici) .plateforme__ici {
+    display: block;
+  }
+
+  /* 7. La famille */
+  .apps {
+    list-style: none;
+    margin: var(--e-7) 0 0;
+    padding: 0;
+    border-top: 1px solid var(--trait);
+  }
+  .app {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr);
+    gap: var(--e-5);
+    align-items: start;
+    padding: var(--e-5) 0;
+    border-bottom: 1px solid var(--trait);
+  }
+  .app > div {
+    display: grid;
+    gap: var(--e-2);
+  }
+  .app__lien,
+  .app__ici {
+    justify-self: end;
+  }
+
+  /* 8. Questions */
+  .questions {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: var(--e-7);
+  }
+  .questions .lien {
+    display: inline-block;
+    margin-top: var(--e-4);
+  }
+  details {
+    border-bottom: 1px solid var(--trait);
+  }
+  details:first-child {
+    border-top: 1px solid var(--trait);
+  }
+  summary {
+    list-style: none;
+    cursor: pointer;
+    padding: var(--e-4) 0;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--e-4);
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::after {
+    content: '+';
+    font-weight: 400;
+    color: var(--encre-douce);
+    transition: transform 180ms var(--sortie);
+  }
+  details[open] summary::after {
+    transform: rotate(45deg);
+  }
+  details p {
+    margin: 0 0 var(--e-4);
+    max-width: 62ch;
+  }
+
+  /* 9. Fin */
+  .fin {
+    padding-bottom: var(--e-9);
+  }
+  .fin .chapo,
+  .fin .caption {
+    margin-top: var(--e-4);
+  }
+
+  @media (max-width: 900px) {
+    .heros,
+    .gd,
+    .securite,
+    .questions {
+      grid-template-columns: 1fr;
+      gap: var(--e-6);
+    }
+    .cadre {
+      --l: 280px;
+    }
+    .grille-filets--3 {
+      grid-template-columns: 1fr;
+    }
+    .grille-filets li,
+    .grille-filets li + li {
+      padding: var(--e-4) 0;
+      border-inline-start: 0;
+    }
+    .grille-filets li + li {
+      border-top: 1px solid var(--trait);
+    }
+    .app,
+    .plateforme {
+      grid-template-columns: 1fr;
+      gap: var(--e-3);
+    }
+    .app__lien,
+    .app__ici,
+    .plateforme > :last-child {
+      justify-self: start;
+    }
+    .wifi__mot,
+    .verifie {
+      font-size: 34px;
+    }
+    .nom {
+      font-size: 40px;
+    }
+    .demo__etapes {
+      min-height: 7.5em;
+    }
+  }
+</style>

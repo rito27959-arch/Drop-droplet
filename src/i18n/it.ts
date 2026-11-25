@@ -153,4 +153,9 @@ export const it: Textes = {
   seulementFrEn: 'Questo documento esiste solo in inglese e in francese: un testo legale tradotto male vincolerebbe più di quanto aiuterebbe.',
   lireFr: 'Leggi in francese',
   faqToutes: 'Tutte le domande',
+  navProduits: "Prodotti",
+  themeVersSombre: "Passa al tema scuro",
+  themeVersClair: "Passa al tema chiaro",
+  idAccroche: "Accedi con un gesto, senza password.",
+  labsAccroche: "Il laboratorio che crea Droplet.",
 };

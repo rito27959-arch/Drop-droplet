@@ -164,6 +164,11 @@ export const fr = {
     "Ce document n'existe qu'en anglais et en français : un texte juridique mal traduit engagerait plus qu'il n'aiderait.",
   lireFr: 'Lire en français',
   faqToutes: 'Toutes les questions',
+  navProduits: "Produits",
+  themeVersSombre: "Passer au thème sombre",
+  themeVersClair: "Passer au thème clair",
+  idAccroche: "Se connecter d'un geste, sans mot de passe.",
+  labsAccroche: "Le laboratoire qui fait Droplet.",
 };
 
 export type Textes = typeof fr;

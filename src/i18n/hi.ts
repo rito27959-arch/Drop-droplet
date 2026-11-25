@@ -153,4 +153,9 @@ export const hi: Textes = {
   seulementFrEn: 'यह दस्तावेज़ सिर्फ़ अंग्रेज़ी और फ़्रेंच में है: ख़राब अनुवाद वाला क़ानूनी पाठ मदद से ज़्यादा बाँध देता।',
   lireFr: 'फ़्रेंच में पढ़ें',
   faqToutes: 'सभी सवाल',
+  navProduits: "उत्पाद",
+  themeVersSombre: "गहरी थीम पर जाएँ",
+  themeVersClair: "हल्की थीम पर जाएँ",
+  idAccroche: "एक इशारे से साइन इन करें, बिना पासवर्ड के।",
+  labsAccroche: "वह लैब जो Droplet बनाती है।",
 };

@@ -153,4 +153,9 @@ export const ar: Textes = {
   seulementFrEn: 'هذه الوثيقة متاحة بالإنجليزية والفرنسية فقط: فالنص القانوني المترجم ترجمة رديئة يُلزم أكثر مما يفيد.',
   lireFr: 'اقرأ بالفرنسية',
   faqToutes: 'كل الأسئلة',
+  navProduits: "المنتجات",
+  themeVersSombre: "التبديل إلى المظهر الداكن",
+  themeVersClair: "التبديل إلى المظهر الفاتح",
+  idAccroche: "سجّل الدخول بإيماءة واحدة، بلا كلمة مرور.",
+  labsAccroche: "المختبر الذي يصنع Droplet.",
 };

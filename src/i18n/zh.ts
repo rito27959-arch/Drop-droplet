@@ -150,4 +150,9 @@ export const zh: Textes = {
   seulementFrEn: '本文件仅提供英文和法文版本：翻译不当的法律文本带来的约束会多于帮助。',
   lireFr: '阅读法文版',
   faqToutes: '所有问题',
+  navProduits: "产品",
+  themeVersSombre: "切换到深色主题",
+  themeVersClair: "切换到浅色主题",
+  idAccroche: "一个手势即可登录，无需密码。",
+  labsAccroche: "打造 Droplet 的实验室。",
 };
